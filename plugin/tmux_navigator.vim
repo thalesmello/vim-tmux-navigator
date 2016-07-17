@@ -78,7 +78,19 @@ function! s:TmuxAwareNavigate(direction)
       catch /^Vim\%((\a\+)\)\=:E141/ " catches the no file name error 
       endtry
     endif
-    let args = 'select-pane -t ' . shellescape($TMUX_PANE) . ' -' . tr(a:direction, 'phjkl', 'lLDUR')
+
+    if a:direction == "h"
+      let g:param = "left"
+    elseif a:direction == "j"
+      let g:param = "down"
+    elseif a:direction == "k"
+      let g:param = "up"
+    elseif a:direction == "l"
+      let g:param = "right"
+    endif
+
+    let args = "run 'octomux tmux " . g:param . "'"
+
     silent call s:TmuxCommand(args)
     if s:NeedsVitalityRedraw()
       redraw!
